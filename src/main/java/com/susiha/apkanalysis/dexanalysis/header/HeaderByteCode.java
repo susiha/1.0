@@ -76,7 +76,7 @@ public class HeaderByteCode {
      * @return 返回ByteString 调用者根据自身结构特点处理
      * @throws IOException
      */
-    private static ByteString getDexByteStringByName(String areaName)throws IOException {
+    private static byte[] getDexByteStringByName(String areaName)throws IOException {
         BufferedSource bufferedSource = Utils.getDexBufferedSource();
         if(headerStruct.size() == 0){
             throw new IllegalStateException("headerStruct 没有添加值！");
@@ -100,10 +100,7 @@ public class HeaderByteCode {
         if(bytes == null){ //表示没有找到对应的名称
             throw new IllegalArgumentException("没有找到名称"+areaName+"!");
         }
-        Buffer buffer = new Buffer();
-        buffer.write(bytes);
-        ByteString byteString = buffer.readByteString();
-        return byteString;
+        return bytes;
     }
 
 
@@ -114,7 +111,8 @@ public class HeaderByteCode {
      * @throws IOException
      */
     public static String magicNumString() throws IOException {
-        String  info =getStoreByteStringByName(HeaderItem.MAGICNUM).utf8();
+        byte[] bytes =getStoreByteStringByName(HeaderItem.MAGICNUM);
+        String  info =Utils.byteArrayToString(bytes);
         Utils.Logger(HeaderItem.MAGICNUM+" info ",info);
         return info;
     }
@@ -125,7 +123,7 @@ public class HeaderByteCode {
      * @throws IOException
      */
     public static int realSizeByName(String areaName) throws IOException{
-        ByteString byteString =getStoreByteStringByName(areaName);
+        byte[] byteString =getStoreByteStringByName(areaName);
         if(byteString == null){
             throw  new IllegalStateException("no areaName was mattched！");
         }
@@ -140,7 +138,7 @@ public class HeaderByteCode {
      * @throws IOException
      */
     public static ByteString realEndianTag()throws IOException{
-        ByteString byteString = getStoreByteStringByName(HeaderItem.ENDIANTAG);
+        byte[] byteString = getStoreByteStringByName(HeaderItem.ENDIANTAG);
         Utils.Logger(HeaderItem.ENDIANTAG+" RealHex", Utils.reverseByteString(byteString).hex());
         return Utils.reverseByteString(byteString);
     }
@@ -151,7 +149,7 @@ public class HeaderByteCode {
      * @throws IOException
      */
     public static ByteString realCheckSum()throws IOException{
-        ByteString byteString = getStoreByteStringByName(HeaderItem.CHECKSUM);
+        byte[] byteString = getStoreByteStringByName(HeaderItem.CHECKSUM);
         Utils.Logger(HeaderItem.CHECKSUM+" RealHex", Utils.reverseByteString(byteString).hex());
         return Utils.reverseByteString(byteString);
     }
@@ -161,10 +159,11 @@ public class HeaderByteCode {
      * @return
      * @throws IOException
      */
-    public static ByteString getStoreByteStringByName(String areaName) throws IOException{
-        ByteString byteString = getDexByteStringByName(areaName);
-        Utils.Logger(areaName+" Hex",byteString.hex());
-        return  byteString;
+    public static byte[] getStoreByteStringByName(String areaName) throws IOException{
+
+        byte[] bytes = getDexByteStringByName(areaName);
+        Utils.Logger(areaName+" Hex",Utils.byteArrayToHex(bytes));
+        return  bytes;
     }
     /**
      * 对除去MagicNum和CheckSum之外的文件区域进行Alder32校验，验证checkSum的值
