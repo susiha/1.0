@@ -1,12 +1,9 @@
 package com.susiha.apkanalysis.dexanalysis;
 
 import com.susiha.apkanalysis.dexanalysis.header.HeaderItem;
-import okio.Buffer;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.Okio;
-
-import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -232,10 +229,18 @@ public class Utils {
         if(bytes ==null||bytes.length==0){
             return null;
         }
+
+        /**
+         * 把结尾的0x00 给去掉
+         */
+        byte[] newBytes = new byte[bytes.length-1];
+        for(int i = 0;i<newBytes.length;i++){
+            newBytes[i] =bytes[i];
+        }
         String data ="initData";
 
         try {
-             data = new String(bytes,"utf-8");
+             data = new String(newBytes,"utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -243,6 +248,58 @@ public class Utils {
     }
 
 
+    /**
+     * 解析字节码中类型表示
+     * @param source
+     * @return
+     */
+    public static String basicTypeConversion(String source){
+        String suffix =""; //后缀
+        String returnData ;
+        if(source ==null||source.equals("")){
+            return "";
+        }
+        if(source.length()>1){
+
+            if(source.startsWith("[")){ //数组的情况
+                suffix = "[]";//数组后缀
+                source= suffix.substring(1);//减去一个前缀[
+                if(source.length()>1){
+
+
+
+                }
+            }
+
+
+
+
+            return source;
+
+        }
+        switch (source){
+            case "B":
+                return "byte";
+            case "Z":
+                return "boolean";
+            case "S":
+                return "short";
+            case "C":
+                return "char";
+            case "I":
+                return "int";
+            case "J":
+                return "long";
+            case "F":
+                return "float";
+            case "D":
+                return "double";
+            case "V":
+                return "void";
+
+        }
+        return source;
+    }
 
 
 

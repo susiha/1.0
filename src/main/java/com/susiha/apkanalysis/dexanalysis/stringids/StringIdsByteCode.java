@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class StringIdsByteCode {
 
-    private static long count =0;//记录已经取得和
     /**
      * 解析String索引区
      * @param stringIdsSize String 个数
@@ -63,12 +62,6 @@ public class StringIdsByteCode {
         stringItemData.setSize(Utils.decodeLeb128(byteList));
         //读取StringData
         stringItemData.setStringData(readStringData(bufferedSource));
-
-
-
-
-
-
         return stringItemData;
     }
 
@@ -106,11 +99,5 @@ public class StringIdsByteCode {
         }
         return byteList;
     }
-
-
-
-
-
-
 
 }

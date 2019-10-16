@@ -1,5 +1,7 @@
 package com.susiha.apkanalysis.dexanalysis.stringids;
 
+import com.susiha.apkanalysis.dexanalysis.Utils;
+
 import java.util.ArrayList;
 
 public class StringItemData {
@@ -39,5 +41,14 @@ public class StringItemData {
      * "/0"结束也就是字节的0x00
      */
     private ArrayList<Byte> stringData;
+
+    /**
+     * 返回真实的String值
+     * @return
+     */
+    public String getRealData(){
+
+        return Utils.byteArrayToString(Utils.byteListToByteArray(stringData));
+    }
 
 }

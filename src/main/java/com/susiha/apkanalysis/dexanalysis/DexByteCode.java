@@ -2,8 +2,12 @@ package com.susiha.apkanalysis.dexanalysis;
 
 import com.susiha.apkanalysis.dexanalysis.header.HeaderByteCode;
 import com.susiha.apkanalysis.dexanalysis.header.HeaderItem;
+import com.susiha.apkanalysis.dexanalysis.protoids.ProtoIdsByteCode;
+import com.susiha.apkanalysis.dexanalysis.protoids.ProtoIdsItem;
 import com.susiha.apkanalysis.dexanalysis.stringids.StringIdsByteCode;
 import com.susiha.apkanalysis.dexanalysis.stringids.StringIdsItem;
+import com.susiha.apkanalysis.dexanalysis.typeIds.TypeIdsByteCode;
+import com.susiha.apkanalysis.dexanalysis.typeIds.TypeIdsItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +17,12 @@ public class DexByteCode {
     public static  void main(String args[]){
         try {
 //            readHeader();
-            readStringIdsItem();
+//            readStringIdsItem();
+            ArrayList<StringIdsItem> stringIdsItems = readStringIdsItem();
+            ArrayList<TypeIdsItem> typeIdsItems =readTypeIdsIttem(stringIdsItems);
+
+            readProtoIdsTem(stringIdsItems,typeIdsItems);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,42 +46,51 @@ public class DexByteCode {
             }
 
         }
-        Utils.Logger("*******特殊","情况*******");
         HeaderByteCode.magicNumString();
         HeaderByteCode.realEndianTag();
 
     }
 
 
-
-    private static void readStringIdsItem() throws IOException{
-
+    /**
+     * 这个读起来太耗费时间了
+     * @return
+     * @throws IOException
+     */
+    private static ArrayList<StringIdsItem> readStringIdsItem() throws IOException{
         int stringIdsSize = HeaderByteCode.realSizeByName(HeaderItem.STRINGIDSSIZE);
         int stringIdsOff = HeaderByteCode.realSizeByName(HeaderItem.STRINGIDSOFF);
-        long startTime = System.currentTimeMillis();
-//        int count = 0;
-//        BufferedSource bufferedSource = Utils.getDexBufferedSource();
-//        for(int i= 0;i<stringIdsSize;i++){
-//            StringIdsItem idsItem = new StringIdsItem();
-//            idsItem.setIndex(i);
-//            byte[] bytes =bufferedSource.readByteArray(4);
-//            int stringDataoff =Utils.reverseInt(bytes);
-//            idsItem.setStringDataOff(stringDataoff);
-//
-//        }
-
-
         ArrayList<StringIdsItem> idsItems = StringIdsByteCode.decodeStringIds(stringIdsSize,stringIdsOff);
-        Utils.Logger("总共花费时间 ",(System.currentTimeMillis()-startTime)+"");
-        Utils.Logger("StringIdsItemSize ",idsItems.size());
-        Utils.Logger("*******分割","一下*******");
+        return idsItems;
+    }
 
-        for(StringIdsItem item:idsItems){
-            Utils.Logger("********",item.toString());
+
+
+    private static ArrayList<TypeIdsItem> readTypeIdsIttem(ArrayList<StringIdsItem> stringIdsItems) throws IOException{
+        int typeIdsSize = HeaderByteCode.realSizeByName(HeaderItem.TYPEIDSSIZE);
+        int typeIdsOff = HeaderByteCode.realSizeByName(HeaderItem.TYPEIDSOFF);
+        ArrayList<TypeIdsItem> typeIdsItems =TypeIdsByteCode.decodeTypeIds(stringIdsItems,typeIdsSize,typeIdsOff);
+        return typeIdsItems;
+    }
+
+    private static ArrayList<ProtoIdsItem> readProtoIdsTem(ArrayList<StringIdsItem> stringIdsItems,ArrayList<TypeIdsItem> typeIdsItems) throws IOException{
+        int protoIdsSize = HeaderByteCode.realSizeByName(HeaderItem.PROTOIDSSIZE);
+        int protoIdsOff = HeaderByteCode.realSizeByName(HeaderItem.PROTOIDSOFF);
+        ArrayList<ProtoIdsItem> protoIdsItems = ProtoIdsByteCode.decodeProtoIds(stringIdsItems,typeIdsItems,protoIdsSize,protoIdsOff);
+        int count = 0;
+        for(ProtoIdsItem idsItem:protoIdsItems){
+
+            Utils.Logger("proto index "+count++,idsItem.toString());
         }
 
 
+        return protoIdsItems;
     }
+
+
+
+
+
 
 
 }
