@@ -2,6 +2,31 @@ package com.susiha.apkanalysis.dexanalysis.header;
 
 /**
  * HeaderStruct对应的Item
+ * struct DexHeader {
+ * u1  magic[8];
+ * u4 checksum;
+ * u1 signature[kSHA1DigestLen]; kSHA1DigestLen = 20
+ * u4 fileSize;
+ * u4 headerSize;
+ * u4 endianTag;
+ * u4 linkSize;
+ * u4 linkOff;
+ * u4 mapOff;
+ * u4 stringIdsSize;
+ * u4 stringIdsOff;
+ * u4 typeIdsSize;
+ * u4 typeIdsOff;
+ * u4 protoIdsSize;
+ * u4 protoIdsOff;
+ * u4 fieldIdsSize;
+ * u4 fieldIdsOff;
+ * u4 methodIdsSize;
+ * u4 methodIdsOff;
+ * u4 classDefsSize;
+ * u4 classDefsOff;
+ * u4 dataSize;
+ * u4 dataOff;
+ * };
  */
 public class HeaderItem {
 
@@ -49,42 +74,40 @@ public class HeaderItem {
      * 所有用到字符串的大小和偏移量 各占四个字节
      */
     public final static String STRINGIDSSIZE = "StringIdsSize";
-    public final static String STRINGIDSOFF ="StringIdsOff";
+    public final static String STRINGIDSOFF = "StringIdsOff";
 
     /**
      * Dex中类型数据结构的大小和偏移量 各占四个字节
      */
     public final static String TYPEIDSSIZE = "TypeIdsSize";
-    public final static String TYPEIDSOFF ="TypeIdsOff";
+    public final static String TYPEIDSOFF = "TypeIdsOff";
     /**
      * Dex中元数据信息数据结构的大小和偏移量 各占四个字节
      */
     public final static String PROTOIDSSIZE = "ProtoIdsSize";
-    public final static String PROTOIDSOFF ="ProtoIdsOff";
+    public final static String PROTOIDSOFF = "ProtoIdsOff";
     /**
      * Dex中字段信息数据结构的大小和偏移量 各占四个字节
      */
     public final static String FIELDIDSSIZE = "FieldIdsSize";
-    public final static String FIELDIDSOFF ="FieldIdsOff";
+    public final static String FIELDIDSOFF = "FieldIdsOff";
     /**
-     *  Dex中方法信息数据结构的大小和偏移量 各占四个字节
+     * Dex中方法信息数据结构的大小和偏移量 各占四个字节
      */
     public final static String METHODIDSSIZE = "MethodIdsSize";
-    public final static String METHODIDSOFF ="MethodIdsOff";
+    public final static String METHODIDSOFF = "MethodIdsOff";
 
     /**
      * Dex 中类信息数据结构的大小和偏移量 各占四个字节
      */
     public final static String CLASSDEFSSIZE = "ClassDefsSize";
-    public final static String CLASSDEFSOFF ="ClassDefsOff";
+    public final static String CLASSDEFSOFF = "ClassDefsOff";
 
     /**
      * Dex 中数据区域的大小和偏移量 各占四个字节
      */
     public final static String DATASIZE = "DataSize";
-    public final static String DATAOFF ="DataOff";
-
-
+    public final static String DATAOFF = "DataOff";
 
 
     public HeaderItem(int index, String areaName, long size) {

@@ -20,10 +20,11 @@ public class ProtoIdsByteCode {
      * @return
      * @throws IOException
      */
-    public static ArrayList<ProtoIdsItem> decodeProtoIds(ArrayList<StringIdsItem> stringIdsItems,
-                                                         ArrayList<TypeIdsItem> typeIdsItems,int protoIdsSize,
-                                                         int protoIdsOff)
-        throws IOException{
+    public static ArrayList<ProtoIdsItem> decodeProtoIds
+           (ArrayList<StringIdsItem> stringIdsItems,
+           ArrayList<TypeIdsItem> typeIdsItems,
+            int protoIdsSize,
+           int protoIdsOff) throws IOException{
         BufferedSource bufferedSource = Utils.getDexBufferedSource();
         bufferedSource.skip(protoIdsOff);
         ArrayList<ProtoIdsItem> protoIdsItems = new ArrayList<>();

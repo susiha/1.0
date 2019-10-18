@@ -1,7 +1,11 @@
 package com.susiha.apkanalysis.dexanalysis;
 
+import com.susiha.apkanalysis.dexanalysis.fieldids.FieldIdsItem;
+import com.susiha.apkanalysis.dexanalysis.fieldids.FieldIdsyteCode;
 import com.susiha.apkanalysis.dexanalysis.header.HeaderByteCode;
 import com.susiha.apkanalysis.dexanalysis.header.HeaderItem;
+import com.susiha.apkanalysis.dexanalysis.methodids.MethodIdsByteCode;
+import com.susiha.apkanalysis.dexanalysis.methodids.MethodIdsItem;
 import com.susiha.apkanalysis.dexanalysis.protoids.ProtoIdsByteCode;
 import com.susiha.apkanalysis.dexanalysis.protoids.ProtoIdsItem;
 import com.susiha.apkanalysis.dexanalysis.stringids.StringIdsByteCode;
@@ -19,9 +23,11 @@ public class DexByteCode {
 //            readHeader();
 //            readStringIdsItem();
             ArrayList<StringIdsItem> stringIdsItems = readStringIdsItem();
-            ArrayList<TypeIdsItem> typeIdsItems =readTypeIdsIttem(stringIdsItems);
+            ArrayList<TypeIdsItem> typeIdsItems =readTypeIdsItem(stringIdsItems);
 
-            readProtoIdsTem(stringIdsItems,typeIdsItems);
+           ArrayList<ProtoIdsItem> protoIdsItem =readProtoIdsItem(stringIdsItems,typeIdsItems);
+//            readFieldIdsItem(stringIdsItems,typeIdsItems);
+            readMethodIdsItem(stringIdsItems,typeIdsItems,protoIdsItem);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,14 +72,14 @@ public class DexByteCode {
 
 
 
-    private static ArrayList<TypeIdsItem> readTypeIdsIttem(ArrayList<StringIdsItem> stringIdsItems) throws IOException{
+    private static ArrayList<TypeIdsItem> readTypeIdsItem(ArrayList<StringIdsItem> stringIdsItems) throws IOException{
         int typeIdsSize = HeaderByteCode.realSizeByName(HeaderItem.TYPEIDSSIZE);
         int typeIdsOff = HeaderByteCode.realSizeByName(HeaderItem.TYPEIDSOFF);
         ArrayList<TypeIdsItem> typeIdsItems =TypeIdsByteCode.decodeTypeIds(stringIdsItems,typeIdsSize,typeIdsOff);
         return typeIdsItems;
     }
 
-    private static ArrayList<ProtoIdsItem> readProtoIdsTem(ArrayList<StringIdsItem> stringIdsItems,ArrayList<TypeIdsItem> typeIdsItems) throws IOException{
+    private static ArrayList<ProtoIdsItem> readProtoIdsItem(ArrayList<StringIdsItem> stringIdsItems,ArrayList<TypeIdsItem> typeIdsItems) throws IOException{
         int protoIdsSize = HeaderByteCode.realSizeByName(HeaderItem.PROTOIDSSIZE);
         int protoIdsOff = HeaderByteCode.realSizeByName(HeaderItem.PROTOIDSOFF);
         ArrayList<ProtoIdsItem> protoIdsItems = ProtoIdsByteCode.decodeProtoIds(stringIdsItems,typeIdsItems,protoIdsSize,protoIdsOff);
@@ -82,10 +88,36 @@ public class DexByteCode {
 
             Utils.Logger("proto index "+count++,idsItem.toString());
         }
-
-
         return protoIdsItems;
     }
+
+    private static ArrayList<FieldIdsItem> readFieldIdsItem(ArrayList<StringIdsItem> stringIdsItems, ArrayList<TypeIdsItem> typeIdsItems) throws IOException{
+        int fieldIdsSize = HeaderByteCode.realSizeByName(HeaderItem.FIELDIDSSIZE);
+        int fieldIdsOff = HeaderByteCode.realSizeByName(HeaderItem.FIELDIDSOFF);
+        ArrayList<FieldIdsItem> fieldIdsItems = FieldIdsyteCode.decodeFieldIds(stringIdsItems,typeIdsItems,fieldIdsSize,fieldIdsOff);
+        int count = 0;
+        for(FieldIdsItem idsItem:fieldIdsItems){
+
+            Utils.Logger("field index "+count++,idsItem.toString());
+        }
+        return fieldIdsItems;
+    }
+
+
+    private static ArrayList<MethodIdsItem> readMethodIdsItem(ArrayList<StringIdsItem> stringIdsItems, ArrayList<TypeIdsItem> typeIdsItems,ArrayList<ProtoIdsItem> protoIdsItems) throws IOException{
+        int methodIdsSize = HeaderByteCode.realSizeByName(HeaderItem.METHODIDSSIZE);
+        int methodIdsOff = HeaderByteCode.realSizeByName(HeaderItem.METHODIDSOFF);
+        ArrayList<MethodIdsItem> methodIdsItems = MethodIdsByteCode.decodeMethodIdsItem(stringIdsItems,typeIdsItems,protoIdsItems,methodIdsSize,methodIdsOff);
+        int count = 0;
+        for(MethodIdsItem idsItem:methodIdsItems){
+
+            Utils.Logger("method index "+count++,idsItem.toString());
+        }
+        return methodIdsItems;
+    }
+
+
+
 
 
 
