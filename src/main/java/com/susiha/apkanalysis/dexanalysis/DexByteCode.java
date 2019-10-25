@@ -1,7 +1,9 @@
 package com.susiha.apkanalysis.dexanalysis;
 
+import com.susiha.apkanalysis.dexanalysis.classdef.ClassDefByteCode;
+import com.susiha.apkanalysis.dexanalysis.classdef.ClassDefItem;
 import com.susiha.apkanalysis.dexanalysis.fieldids.FieldIdsItem;
-import com.susiha.apkanalysis.dexanalysis.fieldids.FieldIdsyteCode;
+import com.susiha.apkanalysis.dexanalysis.fieldids.FieldIdsByteCode;
 import com.susiha.apkanalysis.dexanalysis.header.HeaderByteCode;
 import com.susiha.apkanalysis.dexanalysis.header.HeaderItem;
 import com.susiha.apkanalysis.dexanalysis.methodids.MethodIdsByteCode;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 public class DexByteCode {
 
     public static  void main(String args[]){
+
         try {
 //            readHeader();
 //            readStringIdsItem();
@@ -26,8 +29,9 @@ public class DexByteCode {
             ArrayList<TypeIdsItem> typeIdsItems =readTypeIdsItem(stringIdsItems);
 
            ArrayList<ProtoIdsItem> protoIdsItem =readProtoIdsItem(stringIdsItems,typeIdsItems);
-//            readFieldIdsItem(stringIdsItems,typeIdsItems);
-            readMethodIdsItem(stringIdsItems,typeIdsItems,protoIdsItem);
+            ArrayList<FieldIdsItem> fieldIdsItems =readFieldIdsItem(stringIdsItems,typeIdsItems);
+            ArrayList<MethodIdsItem> methodIdsItems =readMethodIdsItem(stringIdsItems,typeIdsItems,protoIdsItem);
+            readClassDefData(stringIdsItems,typeIdsItems,methodIdsItems,fieldIdsItems);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,7 +98,7 @@ public class DexByteCode {
     private static ArrayList<FieldIdsItem> readFieldIdsItem(ArrayList<StringIdsItem> stringIdsItems, ArrayList<TypeIdsItem> typeIdsItems) throws IOException{
         int fieldIdsSize = HeaderByteCode.realSizeByName(HeaderItem.FIELDIDSSIZE);
         int fieldIdsOff = HeaderByteCode.realSizeByName(HeaderItem.FIELDIDSOFF);
-        ArrayList<FieldIdsItem> fieldIdsItems = FieldIdsyteCode.decodeFieldIds(stringIdsItems,typeIdsItems,fieldIdsSize,fieldIdsOff);
+        ArrayList<FieldIdsItem> fieldIdsItems = FieldIdsByteCode.decodeFieldIds(stringIdsItems,typeIdsItems,fieldIdsSize,fieldIdsOff);
         int count = 0;
         for(FieldIdsItem idsItem:fieldIdsItems){
 
@@ -115,6 +119,23 @@ public class DexByteCode {
         }
         return methodIdsItems;
     }
+
+
+    private static ArrayList<ClassDefItem> readClassDefData(ArrayList<StringIdsItem> stringIdsItems, ArrayList<TypeIdsItem> typeIdsItems,
+                                                            ArrayList<MethodIdsItem> methodIdsItems,ArrayList<FieldIdsItem> fieldIdsItems) throws IOException{
+        int classDefSize = HeaderByteCode.realSizeByName(HeaderItem.CLASSDEFSSIZE);
+        int classDefOff = HeaderByteCode.realSizeByName(HeaderItem.CLASSDEFSOFF);
+        ArrayList<ClassDefItem> classDefItems = ClassDefByteCode.decodeClassDef(stringIdsItems,typeIdsItems,methodIdsItems,fieldIdsItems,classDefSize,classDefOff);
+
+        for(int i =0;i<classDefItems.size();i++){
+            if(classDefItems.get(i).getStaticValuesOff()!=0){
+                Utils.Logger("Index ",i);
+                Utils.Logger(classDefItems.get(i).toString());
+            }
+        }
+        return classDefItems;
+    }
+
 
 
 

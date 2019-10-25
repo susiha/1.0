@@ -36,11 +36,72 @@ public class AccessFlag {
                     | ACC_DECLARED_SYNCHRONIZED);
 
     /**
-     *
+     * 获取Class的访问修饰符
      * @param accessFlags
      * @return
      */
-     public static String getAccessFlagDesc(int accessFlags){
-         return "";
+     public static String getClassAccessFlag(int accessFlags){
+         StringBuilder sb = new StringBuilder();
+         if((accessFlags&ACC_PUBLIC) == ACC_PUBLIC){
+             sb.append("public ");
+         }
+         if((accessFlags&ACC_FINAL) == ACC_FINAL){
+             sb.append("final ");
+         }
+         if((accessFlags&ACC_ABSTRACT) == ACC_ABSTRACT){
+             sb.append("abstract ");
+         }
+         if((accessFlags&ACC_SYNTHETIC) == ACC_SYNTHETIC){
+             sb.append("synthetic ");
+         }
+         if((accessFlags&ACC_ANNOTATION) == ACC_ANNOTATION){
+             sb.append("@interface ");
+         }
+         if((accessFlags&ACC_ENUM) == ACC_ENUM){
+             sb.append("enum ");
+         }
+         if((accessFlags&ACC_INTERFACE) == ACC_INTERFACE){
+             sb.append("interface ");
+         }
+         return sb.toString();
      }
+
+
+
+    /**
+     * 获取Field的访问修饰符
+     * @param accessFlags
+     * @return
+     */
+    public static String getFieldAccessFlag(int accessFlags){
+        StringBuilder sb = new StringBuilder();
+        if((accessFlags&ACC_PUBLIC) == ACC_PUBLIC){
+            sb.append("public ");
+        }
+        if((accessFlags&ACC_PROTECTED) == ACC_PROTECTED){
+            sb.append("protected ");
+        }
+        if((accessFlags&ACC_PRIVATE) == ACC_PRIVATE){
+            sb.append("private ");
+        }
+        if((accessFlags&ACC_STATIC) == ACC_STATIC){
+            sb.append("static ");
+        }
+        if((accessFlags&ACC_FINAL) == ACC_FINAL){
+            sb.append("final ");
+        }
+        if((accessFlags&ACC_VOLATILE) == ACC_VOLATILE){
+            sb.append("volatile ");
+        }
+        if((accessFlags&ACC_TRANSIENT) == ACC_TRANSIENT){
+            sb.append("transient ");
+        }
+        if((accessFlags&ACC_SYNTHETIC) == ACC_SYNTHETIC){
+            sb.append("synthetic ");
+        }
+        if((accessFlags&ACC_ENUM) == ACC_ENUM){
+            sb.append("enum ");
+        }
+        return sb.toString();
+    }
 }

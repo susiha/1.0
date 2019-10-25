@@ -8,5 +8,24 @@ package com.susiha.apkanalysis.dexanalysis.classdef.annotation;
  */
 public class AnnotationItem {
 
+    private byte visibility;
+
+    public byte getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(byte visibility) {
+        this.visibility = visibility;
+    }
+
+    public EncodedAnnotation getEncodedAnnotation() {
+        return encodedAnnotation;
+    }
+
+    public void setEncodedAnnotation(EncodedAnnotation encodedAnnotation) {
+        this.encodedAnnotation = encodedAnnotation;
+    }
+
+    private EncodedAnnotation encodedAnnotation;
 
 }

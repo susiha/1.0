@@ -12,16 +12,15 @@ import java.util.ArrayList;
  *   };
  */
 public class DexTypeList {
-    public static final int BYTESIZE = 4;
     //表示Type的个数 4个字节
-    private byte[] size;
+    private int size;
     private ArrayList<DexTypeItem> dexTypeLists;
 
-    public byte[] getSize() {
+    public int getSize() {
         return size;
     }
 
-    public void setSize(byte[] size) {
+    public void setSize(int size) {
         this.size = size;
     }
 
@@ -31,8 +30,5 @@ public class DexTypeList {
 
     public void setDexTypeLists(ArrayList<DexTypeItem> dexTypeLists) {
         this.dexTypeLists = dexTypeLists;
-    }
-    public int getRealSize(){
-        return Utils.reverseInt(size);
     }
 }

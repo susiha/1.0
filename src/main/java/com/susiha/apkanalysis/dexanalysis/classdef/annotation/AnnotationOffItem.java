@@ -1,6 +1,5 @@
 package com.susiha.apkanalysis.dexanalysis.classdef.annotation;
 
-import com.susiha.apkanalysis.dexanalysis.Utils;
 
 /**
  * struct DexAnnotationOffItem {
@@ -9,15 +8,14 @@ import com.susiha.apkanalysis.dexanalysis.Utils;
  *   };
  */
 public class AnnotationOffItem {
-    public static final int ANNOTATION_OFF_SIZE = 4;
     //表示偏移量 占四个字节
-    private byte[] annotationOff;
+    private int annotationOff;
     private AnnotationItem annotationItem;
-    public byte[] getAnnotationOff() {
+    public int getAnnotationOff() {
         return annotationOff;
     }
 
-    public void setAnnotationOff(byte[] annotationOff) {
+    public void setAnnotationOff(int annotationOff) {
         this.annotationOff = annotationOff;
     }
 
@@ -28,14 +26,5 @@ public class AnnotationOffItem {
     public void setAnnotationItem(AnnotationItem annotationItem) {
         this.annotationItem = annotationItem;
     }
-
-    //获取真实的偏移量值
-    public int getRealAnnotationOffValue(){
-        return Utils.reverseInt(annotationOff);
-    }
-
-
-
-
 
 }

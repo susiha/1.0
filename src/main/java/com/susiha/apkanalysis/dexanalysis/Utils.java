@@ -49,6 +49,13 @@ public class Utils {
         }
     }
 
+
+    public static void Logger(String tag) {
+        if (showLog) {
+            System.out.println(tag );
+        }
+    }
+
     public static void Logger(String tag, int msg) {
         if (showLog) {
             System.out.println(tag + " = " + msg);
@@ -106,7 +113,7 @@ public class Utils {
      * @param bufferedSource 读取byte
      * @return 返回的是byte List也是小端存储的，低数据存放在前面，高数据存放在后面
      */
-    public static ArrayList<Byte> readUleb128(BufferedSource bufferedSource) throws IOException {
+    public static ArrayList<Byte> readLeb128(BufferedSource bufferedSource) throws IOException {
         if (bufferedSource == null) {
             return null;
         }
@@ -125,7 +132,10 @@ public class Utils {
     }
 
 
+
+
     /**
+     * 解析无符号
      * 根据读取的字节进行数据转换求出size 转换规则
      * 1 先通过byte&0x7f 计算出真实的值(去掉高位的符号位)
      * 2 把结果右移,右移位数是7的倍数(真实数据就7位)
@@ -134,7 +144,7 @@ public class Utils {
      * @param bytes
      * @return
      */
-    public static int decodeLeb128(List<Byte> bytes) {
+    public static int decodeULeb128(List<Byte> bytes) {
         if (bytes == null || bytes.size() == 0) {
             throw new IllegalStateException("read uleb128 error!");
         }
@@ -144,6 +154,45 @@ public class Utils {
         }
         return result;
     }
+
+
+    /**
+     * 解析ULeb128p1,这是Uleb128的一种变异
+     * @param bytes
+     * @return
+     */
+    public static int decodeULeb128P1(List<Byte> bytes){
+        return decodeULeb128(bytes)-1;
+    }
+
+    /**
+     * 解析有符号的Leb128，最后一个字节要做符号扩展
+     * @param bytes
+     * @return
+     */
+    public static int decodeSLeb128(List<Byte> bytes){
+        if (bytes == null || bytes.size() == 0) {
+            throw new IllegalStateException("read sleb128 error!");
+        }
+        int result = 0;
+        for (int i = 0; i < bytes.size(); i++) {
+            result = result | ((bytes.get(i) & 0x7f) << (i * 7));
+        }
+
+        //进行符号位扩展
+        int syExt = 25-(bytes.size()-1)*7;
+        if(syExt>0){
+            result = (result<<syExt)>>syExt;
+        }
+        return result;
+    }
+
+
+
+
+
+
+
 
 
     /**
@@ -285,15 +334,18 @@ public class Utils {
 
             if(source.length()>1){ //表示Obeject对象类型
                 //去掉前缀L和后缀;
-                source = source.substring(1,source.length()-1);
-                StringBuilder sb = new StringBuilder();
-                 sb.append(source);
+                if(source.startsWith("L")&&source.endsWith(";")){
+                    source = source.substring(1,source.length()-1);
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(source);
                     if(count>0){
                         for(int i =0;i<count;i++){
                             sb.append("[]");
                         }
                     }
-                return sb.toString();
+                    return sb.toString();
+                }
+
 
             }
         }

@@ -9,20 +9,12 @@ import com.susiha.apkanalysis.dexanalysis.Utils;
  *  };
  */
 public class DexTypeItem {
-    public static final int DEXTYPE_IDX_SIZE =2;
     //指向TypeIds的索引 占两个字节
-    private byte[] typeIdx;
-
-    public byte[] getTypeIdx() {
+    private short typeIdx;
+    public short getTypeIdx() {
         return typeIdx;
     }
-
-    public void setTypeIdx(byte[] typeIdx) {
+    public void setTypeIdx(short typeIdx) {
         this.typeIdx = typeIdx;
-    }
-    //获取真实的int值
-    public int getRealTypeIdx(){
-
-        return Utils.reverseInt(typeIdx);
     }
 }

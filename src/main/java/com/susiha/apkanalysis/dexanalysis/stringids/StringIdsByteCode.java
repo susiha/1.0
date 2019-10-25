@@ -57,9 +57,9 @@ public class StringIdsByteCode {
         //跳到偏移位置
         bufferedSource.skip(stringDataOff);
         //读ULeb128数据
-        ArrayList<Byte> byteList =readUleb128(bufferedSource);
+        ArrayList<Byte> byteList =readLeb128(bufferedSource);
         stringItemData.setOriginalByteArray(byteList);
-        stringItemData.setSize(Utils.decodeLeb128(byteList));
+        stringItemData.setSize(Utils.decodeULeb128(byteList));
         //读取StringData
         stringItemData.setStringData(readStringData(bufferedSource));
         return stringItemData;
@@ -67,13 +67,13 @@ public class StringIdsByteCode {
 
 
     /**
-     * 读取ULeb128字节数组
+     * 读取Leb128字节数组
      * @param bufferedSource
      * @return
      * @throws IOException
      */
-    private static ArrayList<Byte> readUleb128(BufferedSource bufferedSource) throws IOException{
-        ArrayList<Byte> byteList = Utils.readUleb128(bufferedSource);
+    private static ArrayList<Byte> readLeb128(BufferedSource bufferedSource) throws IOException{
+        ArrayList<Byte> byteList = Utils.readLeb128(bufferedSource);
         return byteList;
     }
 
